@@ -10,29 +10,30 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      issues: write
+      pull-requests: write
+
     steps:
     - uses: actions/checkout@v1
     - name: Get the version
-       
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
     - name: Zip the release package
       id: zip
       run: |
-        mkdir -p publish/Custom/Scripts/aqualonix/Jiggle
-        cp -r src publish/Custom/Scripts/aqualonix/Jiggle/
-        cp *.cslist publish/Custom/Scripts/aqualonix/Jiggle/
+        mkdir -p publish/Custom/Scripts/Acidbubbles/Jiggle
+        cp -r src publish/Custom/Scripts/AcidBubbles/Jiggle/
+        cp *.cslist publish/Custom/Scripts/AcidBubbles/Jiggle/
         cp meta.json publish/
         sed -i 's/v0.0.0/${{ steps.get_version.outputs.VERSION }}/' publish/meta.json
         cd publish
-        zip -r "aqualonix.Jiggle.${{ github.run_number }}.var" *
+        zip -r "Acidbubbles.Jiggle.${{ github.run_number }}.var" *
     - name: GitHub release
-       uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
         draft: true
-        files: publish/aqualonix.Jiggle.${{ github.run_number }}.var
+        files: publish/Acidbubbles.Jiggle.${{ github.run_number }}.var
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        permissions:
-  contents: write
